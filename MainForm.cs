@@ -519,10 +519,19 @@ namespace SadaFileSyncer
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            trayIcon.Visible = false;
-            StopWatcher();
-            SaveSettings();
-            base.OnFormClosing(e);
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                Hide();
+                trayIcon.ShowBalloonTip(1000, "SadaFileSyncer", "App is running in background. Right-click tray icon to exit.", ToolTipIcon.Info);
+            }
+            else
+            {
+                trayIcon.Visible = false;
+                StopWatcher();
+                SaveSettings();
+                base.OnFormClosing(e);
+            }
         }
     }
 }
